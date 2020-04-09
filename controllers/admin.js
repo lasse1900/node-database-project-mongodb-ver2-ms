@@ -19,7 +19,8 @@ exports.postAddProduct = (req, res, next) => {
     imageUrl: imageUrl,
     description: description
   }).then(result => {
-    console.log(result)
+    // console.log(result)
+    console.log('Created product')
   })
     .catch(err => {
       console.log(err)
@@ -32,7 +33,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId
-  Product.findById(prodId, product => {
+  Product.findByPk(prodId, product => {
     if (!product) {
       return res.redirect('/')
     }
