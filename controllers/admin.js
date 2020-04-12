@@ -13,7 +13,7 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl
   const description = req.body.description
   const price = req.body.price
-  const product = new Product(title, imageUrl, description, price)
+  const product = new Product(title, price, description, imageUrl);
   product
     .save()
     .then(result => {
@@ -32,7 +32,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then(product => {
       if (!product) {
         return res.redirect('/');
