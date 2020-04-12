@@ -32,7 +32,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId
-  Product.findById(prodId)
+  Product.findByPk(prodId)
     .then(product => {
       if (!product) {
         return res.redirect('/');
@@ -88,11 +88,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findByPk(prodId)
-    .then(product => {
-      return product.destroy()
-    })
-    .then(result => {
+  Product.deleteById(prodId)
+    .then(() => {
       console.log('destroyed product')
       res.redirect('/admin/products');
     })
