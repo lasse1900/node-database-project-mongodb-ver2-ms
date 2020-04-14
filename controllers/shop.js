@@ -81,16 +81,14 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user
-    .getOrders()
+  Order.find({ 'user.userId': req.user._id })
     .then(orders => {
       res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
         orders: orders
-      });
-    })
-    .catch(err => console.log(err));
+      })
+    }).catch(err => console.log(err));
 };
 
 exports.postOrder = (req, res, next) => {
