@@ -9,7 +9,6 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const errorController = require('./controllers/error');
 const User = require('./models/user')
 
-// OBS!
 const MONGODB_URI = 'mongodb+srv://academic:paarynapuu@cluster0-itz0t.mongodb.net/shop?retryWrites=true&w=majority'
 
 const app = express();
@@ -27,19 +26,21 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: 'my verysecret',
-  resave: false,
-  saveUninitialized: false,
-  store: store
-})
+app.use(
+  session({
+    secret: 'my verysecret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
 )
 
 app.use((req, res, next) => {
-  User.findById('5e947d0abdbc696703ede86d').then(user => {
-    req.user = user
-    next()
-  })
+  User.findById('5e947d0abdbc696703ede86d')
+    .then(user => {
+      req.user = user
+      next()
+    })
     .catch(err => console.log(err))
 })
 
