@@ -4,3 +4,4 @@ NodeJs project with:
 - MongoDB
 - mongoose
 - bcryptjs
+- flash
