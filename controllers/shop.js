@@ -37,8 +37,7 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         prods: products,
         pageTitle: 'Shop',
-        path: '/',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/'
       });
     })
     .catch(err => {
@@ -51,7 +50,7 @@ exports.getCart = (req, res, next) => {
     .populate('cart.items.productId')
     .execPopulate()
     .then(user => {
-      // console.log(user.cart.items)
+      // console.log(user.cart.items) 
       const products = user.cart.items
       res.render('shop/cart', {
         path: '/cart',
