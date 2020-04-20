@@ -9,13 +9,13 @@ const User = require('../models/user');
 // Step 1
 const auth = {
   auth: {
-      api_key: process.env.API_KEY || 'mailgun_api_key', // TODO: 
-      domain: process.env.DOMAIN || 'mailgun_domain' // TODO:
+    api_key: process.env.API_KEY || 'mailgun_api_key', // TODO: 
+    domain: process.env.DOMAIN || 'mailgun_domain' // TODO:
   }
 };
 
 // Step 2
-let transporter = nodemailer.createTransport( mailGun(auth) );
+let transporter = nodemailer.createTransport(mailGun(auth));
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error')
@@ -134,3 +134,17 @@ exports.postLogout = (req, res, next) => {
     res.redirect('/')
   })
 };
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash('error')
+  if (message.length > 0) {
+    message = message[0]
+  } else {
+    message = null
+  }
+  res.render('auth/reset', {
+    path: '/reset',
+    pageTitle: 'Reset password',
+    errorMessage: message
+  });
+}
