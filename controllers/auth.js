@@ -1,4 +1,5 @@
 require('dotenv').config();
+const crypto = require('crypto')
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const mailGun = require('nodemailer-mailgun-transport');
@@ -104,19 +105,14 @@ exports.postSignup = (req, res, next) => {
             {
               to: req.body.email,
               from: 'shop@node-complete.com',
-              subject: 'Password reset',
-              html: `
-                <p>You requested a password reset</p>
-                <p>Click this <a href="http://localhost:3000/reset/token">link</a> to set a new password.</p>
-              `
+              subject: 'Sign up',
+              text: 'You succesfully signed up!'
             },
             (err, data) => {
               if (err) {
                 console.log('Error occurs', err)
-                return log('Error occurs', err);
               }
               console.log('Email sent!')
-              return log('Email sent!');
             });
         })
         .catch(err => {
@@ -147,4 +143,42 @@ exports.getReset = (req, res, next) => {
     pageTitle: 'Reset password',
     errorMessage: message
   });
+}
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err)
+      return res.redirect('/reset')
+    }
+    const token = buffer.toString('hex')
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          req.flash('error', 'No account under that email')
+          return res.redirect('/reset')
+        }
+        user.resetToken = token
+        user.resetTokenExpiration = Date.now() + 3600000
+        return user.save()
+      })
+      .then(result => {
+        res.redirect('/')
+        return transporter.sendMail(
+          {
+            to: req.body.email,
+            from: 'shop@node-complete.com',
+            subject: 'Password reset',
+            html: `
+              <p>You requested a password reset</p>
+              <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
+            `
+          }).then(() => {
+            console.log('Email Sent')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+  })
 }

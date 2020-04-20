@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,7 +12,7 @@ const flash = require('connect-flash')
 const errorController = require('./controllers/error');
 const User = require('./models/user')
 
-const MONGODB_URI = 'mongodb+srv://academic:paarynapuu@cluster0-itz0t.mongodb.net/shop?retryWrites=true&w=majority'
+const MONGODB_URI = process.env.MONGODB_URI
 
 const app = express();
 const store = new MongoDBStore({
