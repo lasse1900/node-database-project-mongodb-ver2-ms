@@ -1,18 +1,21 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const mailGun = require('nodemailer-mailgun-transport');
 const log = console.log;
 
 const User = require('../models/user');
 
 // Step 1
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
+const auth = {
   auth: {
-    user: process.env.EMAIL || 'abc@gmail.com', // TODO: your gmail account 
-    pass: process.env.PASSWORD || '1234' // TODO: your gmail password
+      api_key: process.env.API_KEY || 'mailgun_api_key', // TODO: 
+      domain: process.env.DOMAIN || 'mailgun_domain' // TODO:
   }
-});
+};
+
+// Step 2
+let transporter = nodemailer.createTransport( mailGun(auth) );
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error')
@@ -70,14 +73,6 @@ exports.postLogin = (req, res, next) => {
         })
     })
     .catch(err => console.log(err))
-};
-
-// Step 2
-let mailOptions = {
-  from: 'lkyttl@gmail.com', // TODO: email sender
-  to: 'lauri.kyttala@gmail.com', // TODO: email receiver
-  subject: 'Nodemailer - Test',
-  html: '<h1>Hey this works!!</h1>Here you can reset you password'
 };
 
 exports.postSignup = (req, res, next) => {
