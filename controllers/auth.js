@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const mailGun = require('nodemailer-mailgun-transport');
-const { validationResult } = require('express-validator/check')
+const { validationResult } = require('express-validator')
 const log = console.log;
 
 const User = require('../models/user');
