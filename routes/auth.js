@@ -10,7 +10,15 @@ router.get('/login', authController.getLogin)
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin)
+router.post('/login',
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Please pick a valid email'),
+    body('password', 'Password has to be valid')
+      .isLength({ min: 5 })
+  ],
+  authController.postLogin)
 
 router.post('/signup',
   [
